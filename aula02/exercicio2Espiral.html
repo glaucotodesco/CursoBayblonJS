@@ -49,30 +49,40 @@
         var engine = null;
         var scene = null;
         var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true }); };
+
         var createScene = function () {
 
-            // Create the scene space
             var scene = new BABYLON.Scene(engine);
 
-            // Add a camera to the scene and attach it to the canvas
-            var camera = new BABYLON.ArcRotateCamera("Camera", 3 * Math.PI / 4, Math.PI / 4, 4, BABYLON.Vector3.Zero(), scene);
+            var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
+            camera.setPosition(new BABYLON.Vector3(5, 5, -5));
             camera.attachControl(canvas, true);
 
-            // Add lights to the scene
-            var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
-            var light2 = new BABYLON.PointLight("light2", new BABYLON.Vector3(0, 1, -1), scene);
+            var light = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(0, 1, 0), scene);
 
-            // Add and manipulate meshes in the scene
-            var box = BABYLON.MeshBuilder.CreateBox("box1", { height: 0.25, width: 0.75, depth: 0.25 }, scene);
-            var box = BABYLON.MeshBuilder.CreateBox("box2", { height: 0.25, width: 0.25, depth: 0.75 }, scene);
-           var box = BABYLON.MeshBuilder.CreateBox("box3", { height: 0.5, width: 0.55, depth: 0.25 }, scene);
-           var box = BABYLON.MeshBuilder.CreateBox("box4", { height: 0.5, width: 0.25, depth: 0.55 }, scene);
-           var box = BABYLON.MeshBuilder.CreateBox("box5", { height: 0.75, width: 0.35, depth: 0.25 }, scene);
-            var box = BABYLON.MeshBuilder.CreateBox("box6", { height: 0.75, width: 0.25, depth: 0.35 }, scene);
-            var box = BABYLON.MeshBuilder.CreateBox("box5", { height: 1, width: 0.15, depth: 0.25 }, scene);
-            var box = BABYLON.MeshBuilder.CreateBox("box6", { height: 1, width: 0.25, depth: 0.15 }, scene);
+            //Array of points to construct a spiral with lines
+            var myPoints1 = [];
+            var myPoints2 = [];
+
+            var deltaTheta = 0.1;
+            var deltaY = 0.005;
+
+            var radius1 = 1;
+            var radius2 = 0.5;
+            var theta = 0;
+            var Y = 0;
+
+            for (var i = 0; i < 400; i++) {
+                myPoints1.push(new BABYLON.Vector3(radius1 * Math.cos(theta), Y, radius1 * Math.sin(theta)));
+                myPoints2.push(new BABYLON.Vector3(radius2 * Math.cos(theta), Y, radius2 * Math.sin(theta)));
+                theta += deltaTheta;
+                Y += deltaY
+            }
+
+            //Create lines 
+            var lines1 = BABYLON.MeshBuilder.CreateLines("lines1", { points: myPoints1 }, scene);
+            var lines2 = BABYLON.MeshBuilder.CreateDashedLines("lines2", { points: myPoints2, dashNb:400 }, scene);
             return scene;
-
 
         };
 
