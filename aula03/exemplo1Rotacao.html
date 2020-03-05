@@ -49,43 +49,32 @@
         var engine = null;
         var scene = null;
         var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true }); };
+
         var createScene = function () {
 
+            // Create the scene space
             var scene = new BABYLON.Scene(engine);
 
-            var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
+            // Add a camera to the scene and attach it to the canvas
+            var camera = new BABYLON.ArcRotateCamera("Camera", 0,0,0, BABYLON.Vector3.Zero(), scene);
             camera.setPosition(new BABYLON.Vector3(0, 0, -5));
             camera.attachControl(canvas, true);
 
-            var light = new BABYLON.HemisphericLight("hemi", new BABYLON.Vector3(0, 0, 1), scene);
+            // Add lights to the scene
+            var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
+            var light2 = new BABYLON.PointLight("light2", new BABYLON.Vector3(0, 1, -1), scene);
 
-           
-      
-            //Array of points to construct lines
-            var myPoints1 = [
-                new BABYLON.Vector3(0, 1, 0),
-                new BABYLON.Vector3(1, 0, 0),
-                new BABYLON.Vector3(0, -1, 0),
-                new BABYLON.Vector3(-1, 0, 0),
-                new BABYLON.Vector3(0, 1, 0),
-            ];
+            // Add and manipulate meshes in the scene
+            var b = BABYLON.MeshBuilder.CreateBox("box", { size: 0.75 }, scene);
+          
+          
 
-            //Array of points to construct lines
-            var myPoints2 = [
-                new BABYLON.Vector3(0, 1, -1),
-                new BABYLON.Vector3(1, 0, -1),
-                new BABYLON.Vector3(0, -1, -1),
-                new BABYLON.Vector3(-1, 0, -1),
-                new BABYLON.Vector3(0, 1, -1),
-            ];
-
-            //Create lines 
-            var lines1 = BABYLON.MeshBuilder.CreateLines("lines1", { points: myPoints1 }, scene);
-            var lines2 = BABYLON.MeshBuilder.CreateLines("lines2", { points: myPoints2 }, scene);
+            b.rotation.y = Math.PI / 4;
+            b.rotation.z = Math.PI / 4;
 
             return scene;
 
-        };
+        }
 
         engine = createDefaultEngine();
         if (!engine) throw 'engine should not be null.';
@@ -97,7 +86,7 @@
             }
         });
 
-        // Resize---
+        // Resize
         window.addEventListener("resize", function () {
             engine.resize();
         });

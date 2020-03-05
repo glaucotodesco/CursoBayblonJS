@@ -57,7 +57,7 @@
 
             // Add a camera to the scene and attach it to the canvas
             var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
-            camera.setPosition(new BABYLON.Vector3(0, 0, -15));
+            camera.setPosition(new BABYLON.Vector3(0, 0, -5));
             camera.attachControl(canvas, true);
 
             // Add lights to the scene
@@ -85,7 +85,7 @@
             box4.position.y = -0.65;
             var s = BABYLON.MeshBuilder.CreateSphere("sph", {}, scene);
 
-            var pivot = BABYLON.Mesh.MergeMeshes([box1, box2, box3, box4, s], true);
+            var pivot = BABYLON.Mesh.MergeMeshes([box1, box2, box3, s], true);
 
             return pivot;
 
