@@ -66,12 +66,20 @@
             // Add and manipulate meshes in the scene
             var b = BABYLON.MeshBuilder.CreateBox("box", { size: 0.75 }, scene);
             var s = BABYLON.MeshBuilder.CreateSphere("sph", {   }, scene);
-
+            b.position.x=-2;
             //Agrupamento    
             var pilot = BABYLON.Mesh.MergeMeshes([b, s], true);
-            pilot.position.x =  1;
+            
+            
+            pilot.position.x =  -1;
             
             return scene;
+
+
+
+
+
+
 
         }
 
