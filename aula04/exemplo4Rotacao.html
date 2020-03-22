@@ -56,26 +56,95 @@
             var scene = new BABYLON.Scene(engine);
 
             // Add a camera to the scene and attach it to the canvas
-            var camera = new BABYLON.ArcRotateCamera("Camera", 0,0,0, BABYLON.Vector3.Zero(), scene);
-            camera.setPosition(new BABYLON.Vector3(0, 0, -15));
+            var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
+            camera.setPosition(new BABYLON.Vector3(0, 0, -30));
             camera.attachControl(canvas, true);
 
             // Add lights to the scene
             var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
             var light2 = new BABYLON.PointLight("light2", new BABYLON.Vector3(0, 1, -1), scene);
 
-            // Add and manipulate meshes in the scene
-            var b = BABYLON.MeshBuilder.CreateBox("box", { size: 0.75 }, scene);
-          
-          
 
-            b.rotation.y = Math.PI / 4;
-            b.rotation.z = Math.PI / 4;
-            b.rotation.x = Math.PI / 4;
+            var tree = createTree();
+
 
             return scene;
 
         }
+
+
+        function createTree() {
+
+            var incY = -4;
+            var scale = 1;
+            const LEN = 10;
+
+            var newMesh = new BABYLON.Mesh("tree", scene);
+
+            var myPoints = [
+                new BABYLON.Vector3(0, incY, 0),
+                new BABYLON.Vector3(0, incY + LEN, 0)
+
+            ];
+
+            var line = BABYLON.MeshBuilder.CreateLines("lines", { points: myPoints }, scene);
+            newMesh.addChild(line);
+
+            for (var i = 0; i < LEN; i++) {
+                var star = createStar();
+                star.position.y = incY;
+                star.scaling = new BABYLON.Vector3(scale, scale, scale);
+                scale -= 0.1;
+                incY += 1;
+                newMesh.addChild(star);
+            }
+
+            return newMesh;
+        }
+
+        function createStar() {
+
+            var angle = 0;
+            var incAngle = Math.PI / 4;
+            var radius = 3;
+            var newMesh = new BABYLON.Mesh("star", scene);
+
+            for (var i = 0; i < 12; i++) {
+
+                var x = Math.cos(angle) * radius;
+                var z = Math.sin(angle) * radius;
+                angle = angle + incAngle;
+
+                var box = BABYLON.MeshBuilder.CreateBox("box", { size: 0.75 }, scene);
+                box.id = "box";
+                var myPoints = [
+                    new BABYLON.Vector3(0, 0, 0),
+                    new BABYLON.Vector3(x, 0, z),
+
+                ];
+                var line = BABYLON.MeshBuilder.CreateLines("lines", { points: myPoints }, scene);
+
+                box.position.x = x;
+                box.position.z = z;
+                box.rotation.y = angle;
+
+                newMesh.addChild(box);
+                newMesh.addChild(line);
+            }
+
+            return newMesh;
+
+        }
+
+        function loop() {
+
+            var meshes = scene.getMeshesByID("box");
+
+            meshes.forEach(function (mesh) {
+                mesh.rotation.y += 0.01;
+            });
+
+        };
 
         engine = createDefaultEngine();
         if (!engine) throw 'engine should not be null.';
@@ -83,7 +152,9 @@
 
         engine.runRenderLoop(function () {
             if (scene) {
+                loop();
                 scene.render();
+
             }
         });
 

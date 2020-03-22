@@ -49,14 +49,14 @@
         var engine = null;
         var scene = null;
         var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true }); };
-
+        var box;
         var createScene = function () {
 
             // Create the scene space
             var scene = new BABYLON.Scene(engine);
 
             // Add a camera to the scene and attach it to the canvas
-            var camera = new BABYLON.ArcRotateCamera("Camera", 0,0,0, BABYLON.Vector3.Zero(), scene);
+            var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
             camera.setPosition(new BABYLON.Vector3(0, 0, -15));
             camera.attachControl(canvas, true);
 
@@ -64,18 +64,41 @@
             var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
             var light2 = new BABYLON.PointLight("light2", new BABYLON.Vector3(0, 1, -1), scene);
 
-            // Add and manipulate meshes in the scene
-            var b = BABYLON.MeshBuilder.CreateBox("box", { size: 0.75 }, scene);
-          
-          
 
-            b.rotation.y = Math.PI / 4;
-            b.rotation.z = Math.PI / 4;
-            b.rotation.x = Math.PI / 4;
+            var box, boxCenter;
+
+
+            box = BABYLON.MeshBuilder.CreateBox("box1", {}, scene);
+            boxCenter = BABYLON.MeshBuilder.CreateBox("boxCenter1", {size:0.1}, scene);
+            newMesh = new BABYLON.Mesh("grupo1", scene);
+            box.position.x = 2;
+            newMesh.addChild(box);
+            newMesh.addChild(boxCenter);
+            newMesh.position.y= 2;
+
+
+            box = BABYLON.MeshBuilder.CreateBox("box2", {}, scene);
+            boxCenter = BABYLON.MeshBuilder.CreateBox("boxCenter2", {size:0.1}, scene);
+            newMesh = new BABYLON.Mesh("grupo2", scene);
+            box.position.x = 2;
+            newMesh.addChild(box);
+            newMesh.addChild(boxCenter);
+            newMesh.position.y= -2;
+
 
             return scene;
 
         }
+
+        function loop()
+        {
+             var grupo1 = scene.getMeshByName("grupo1");
+             grupo1.rotation.z += 0.01;
+
+             var grupo2 = scene.getMeshByName("grupo2");
+             grupo2.rotation.z += 0.01;
+
+        };
 
         engine = createDefaultEngine();
         if (!engine) throw 'engine should not be null.';
@@ -83,6 +106,7 @@
 
         engine.runRenderLoop(function () {
             if (scene) {
+                loop();
                 scene.render();
             }
         });

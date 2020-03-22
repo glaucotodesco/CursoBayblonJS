@@ -57,26 +57,30 @@
 
             // Add a camera to the scene and attach it to the canvas
             var camera = new BABYLON.ArcRotateCamera("Camera", 0,0,0, BABYLON.Vector3.Zero(), scene);
-            camera.setPosition(new BABYLON.Vector3(0, 0, -15));
+            camera.setPosition(new BABYLON.Vector3(0, 0, -5));
             camera.attachControl(canvas, true);
 
             // Add lights to the scene
             var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
             var light2 = new BABYLON.PointLight("light2", new BABYLON.Vector3(0, 1, -1), scene);
 
-            // Add and manipulate meshes in the scene
-            var b = BABYLON.MeshBuilder.CreateBox("box", { size: 0.75 }, scene);
+            var b1 = BABYLON.MeshBuilder.CreateBox("box", { size: 0.25 }, scene);
+            var b2 = BABYLON.MeshBuilder.CreateBox("box", { size: 0.25 }, scene);
+            var b3 = BABYLON.MeshBuilder.CreateBox("box", { size: 0.25 }, scene);
+            //add
+            b1.locallyTranslate(new BABYLON.Vector3(1, 0, 0));
+            b1.locallyTranslate(new BABYLON.Vector3(1, 0, 0));
           
-          
-
-            b.rotation.y = Math.PI / 4;
-            b.rotation.z = Math.PI / 4;
-            b.rotation.x = Math.PI / 4;
-
+            //set
+            b2.position = new BABYLON.Vector3(-1, 0, 0);
+            b2.position = new BABYLON.Vector3(-1, 0, 0);
+            b3.position.y = 1;
+            b3.position.y = 1;
             return scene;
 
         }
 
+        
         engine = createDefaultEngine();
         if (!engine) throw 'engine should not be null.';
         scene = createScene();
