@@ -65,8 +65,16 @@
             var light2 = new BABYLON.PointLight("light2", new BABYLON.Vector3(0, 1, -1), scene);
 
             var b1 = BABYLON.MeshBuilder.CreateBox("box", { size: 0.25 }, scene);
+            var greenMaterial = new BABYLON.StandardMaterial("myMaterial",scene);
+            greenMaterial.diffuseColor = new BABYLON.Color3(0,1,0);
+            b1.material = greenMaterial;
+
             var b2 = BABYLON.MeshBuilder.CreateBox("box", { size: 0.25 }, scene);
             var b3 = BABYLON.MeshBuilder.CreateBox("box", { size: 0.25 }, scene);
+            var redMaterial = new BABYLON.StandardMaterial("myMaterial",scene);
+            redMaterial.diffuseColor = new BABYLON.Color3(1,0,0);
+            b2.material = redMaterial;
+            b3.material = redMaterial;
             //add
             b1.locallyTranslate(new BABYLON.Vector3(1, 0, 0));
             b1.locallyTranslate(new BABYLON.Vector3(1, 0, 0));
