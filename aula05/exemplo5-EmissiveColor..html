@@ -54,36 +54,44 @@
 
             // Create the scene space
             var scene = new BABYLON.Scene(engine);
+           
 
             // Add a camera to the scene and attach it to the canvas
             var camera = new BABYLON.ArcRotateCamera("Camera", 0,0,0, BABYLON.Vector3.Zero(), scene);
-            camera.setPosition(new BABYLON.Vector3(0, 0, -5));
+            camera.setPosition(new BABYLON.Vector3(0, 0, -15));
             camera.attachControl(canvas, true);
 
-            // Add lights to the scene
-            var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
-            var light2 = new BABYLON.PointLight("light2", new BABYLON.Vector3(0, 1, -1), scene);
+            
 
-            var b1 = BABYLON.MeshBuilder.CreateBox("box", { size: 0.25 }, scene);
-            var greenMaterial = new BABYLON.StandardMaterial("myMaterial",scene);
-            greenMaterial.diffuseColor = new BABYLON.Color3(0,1,0);
-            b1.material = greenMaterial;
+            //Luz
+            //var light = new BABYLON.PointLight("light", new BABYLON.Vector3(0, 0,0), scene);
+           
+            //Meus materiais
+            var myMaterialWhite = new BABYLON.StandardMaterial("myMaterialWhite",scene);
+            myMaterialWhite.emissiveColor =  new BABYLON.Color3(1, 1, 1);
 
-            var b2 = BABYLON.MeshBuilder.CreateBox("box", { size: 0.25 }, scene);
-            var b3 = BABYLON.MeshBuilder.CreateBox("box", { size: 0.25 }, scene);
-            var redMaterial = new BABYLON.StandardMaterial("myMaterial",scene);
-            redMaterial.diffuseColor = new BABYLON.Color3(1,0,0);
-            b2.material = redMaterial;
-            b3.material = redMaterial;  
-            //add
-            b1.locallyTranslate(new BABYLON.Vector3(1, 0, 0));
-            b1.locallyTranslate(new BABYLON.Vector3(1, 0, 0));
-          
-            //set
-            b2.position = new BABYLON.Vector3(-1, 0, 0);
-            b2.position = new BABYLON.Vector3(-1, 0, 0);
-            b3.position.y = 1;
-            b3.position.y = 1;
+            var myMaterialRed = new BABYLON.StandardMaterial("myMaterialRed",scene);
+            myMaterialRed.emissiveColor =  new BABYLON.Color3(1, 0, 0);
+            
+
+            //Aplica white como material
+            var s1 = BABYLON.MeshBuilder.CreateSphere("sph", {}, scene);
+            s1.position.x = -2;
+            s1.material = myMaterialWhite;
+            var s2 = BABYLON.MeshBuilder.CreateSphere("sph", {}, scene);
+            s2.position.x =  2;
+            s2.material = myMaterialWhite;
+
+
+            //Aplica red como material
+            var s3 = BABYLON.MeshBuilder.CreateSphere("sph", {}, scene);
+            s3.position.y =  2;
+            s3.material = myMaterialRed;
+            var s4 = BABYLON.MeshBuilder.CreateSphere("sph", {}, scene);
+            s4.position.y =  -2;
+            s4.material = myMaterialRed;
+
+
             return scene;
 
         }

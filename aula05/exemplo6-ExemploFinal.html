@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <title>Babylon.js sample code</title>
+
+    <!-- Babylon.js -->
+    <script src="https://code.jquery.com/pep/0.4.2/pep.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
+    <script src="https://preview.babylonjs.com/ammo.js"></script>
+    <script src="https://preview.babylonjs.com/cannon.js"></script>
+    <script src="https://preview.babylonjs.com/Oimo.js"></script>
+    <script src="https://preview.babylonjs.com/libktx.js"></script>
+    <script src="https://preview.babylonjs.com/earcut.min.js"></script>
+    <script src="https://preview.babylonjs.com/babylon.js"></script>
+    <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+    <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+    <script src="https://preview.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
+    <script src="https://preview.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
+    <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+    <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
+    <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
+
+    <style>
+        html,
+        body {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="renderCanvas"></canvas>
+    <script>
+        var canvas = document.getElementById("renderCanvas");
+
+        var engine = null;
+        var scene = null;
+        var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true }); };
+
+        var createScene = function () {
+
+            // Create the scene space
+            var scene = new BABYLON.Scene(engine);
+            scene.ambientColor = new BABYLON.Color3(0.3, 0.3, 0.3);
+
+            // Add a camera to the scene and attach it to the canvas
+            var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
+            camera.setPosition(new BABYLON.Vector3(0, 0, -15));
+            camera.attachControl(canvas, true);
+
+
+            //Luz
+            var light1 = new BABYLON.PointLight("light", new BABYLON.Vector3(0, 0, 0), scene);
+            light1.diffuse = new BABYLON.Color3(1, 1, 1);
+	        light1.specular = new BABYLON.Color3(0.8, 0.8, 0.8);
+
+            //Luz
+            var light2 = new BABYLON.PointLight("light", new BABYLON.Vector3(10, 0, 0), scene);
+            light2.diffuse = new BABYLON.Color3(1, 1, 1);
+	        light2.specular = new BABYLON.Color3(0.8, 0.8, 0.8);
+
+
+	        createTree();
+
+            
+         
+
+
+            return scene;
+
+        }
+
+        function createTree() {
+
+            var incY = -4;
+            var scale = 1;
+            const LEN = 10;
+
+            var newMesh = new BABYLON.Mesh("tree", scene);
+            var reds = [new BABYLON.Color4(1,0,0,1), new BABYLON.Color4(1,0,0,1)];
+            var myPoints = [
+                new BABYLON.Vector3(0, incY, 0),
+                new BABYLON.Vector3(0, incY + LEN, 0)
+
+            ];
+
+            var line = BABYLON.MeshBuilder.CreateLines("lines", { points: myPoints, colors:reds }, scene);
+            newMesh.addChild(line);
+
+            for (var i = 0; i < LEN; i++) {
+                var star = createStar();
+                star.position.y = incY;
+                star.scaling = new BABYLON.Vector3(scale, scale, scale);
+                scale -= 0.1;
+                incY += 1;
+                newMesh.addChild(star);
+            }
+
+            return newMesh;
+        }
+
+        function createStar() {
+
+            var angle = 0;
+            var incAngle = Math.PI / 4;
+            var radius = 3;
+            var newMesh = new BABYLON.Mesh("star", scene);
+
+            var myMaterial = new BABYLON.StandardMaterial("myMaterial", scene);
+            myMaterial.diffuseColor = new BABYLON.Color3(0.7, 0, 0);
+            myMaterial.specularColor = new BABYLON.Color3(1.0, 1.0, 1.0);
+            myMaterial.emissiveColor = new BABYLON.Color3(0.2, 0.0, 0.0);
+            myMaterial.ambientColor = new BABYLON.Color3(0.1, 0, 0);
+
+   
+
+            for (var i = 0; i < 12; i++) {
+
+                var x = Math.cos(angle) * radius;
+                var z = Math.sin(angle) * radius;
+                angle = angle + incAngle;
+
+                var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 0.75 }, scene);
+                sphere.id = "sphere";
+               sphere.material = myMaterial;
+
+               var reds = [new BABYLON.Color4(1,0,0,1), new BABYLON.Color4(1,0,0,1)];
+                var myPoints = [
+                    new BABYLON.Vector3(0, 0, 0),
+                    new BABYLON.Vector3(x, 0, z),
+
+                ];
+                var line = BABYLON.MeshBuilder.CreateLines("lines", { points: myPoints, colors: reds }, scene);
+                line.material = myMaterial;
+
+                sphere.position.x = x;
+                sphere.position.z = z;
+                sphere.rotation.y = angle;
+
+                newMesh.addChild(sphere);
+                newMesh.addChild(line);
+            }
+
+            return newMesh;
+
+        }
+
+        function loop() {
+
+            var meshes = scene.getMeshesByID("star");
+
+            var inc = 1;
+            meshes.forEach(function (mesh) {
+                mesh.rotation.y += (0.01 * inc);
+                inc = inc * -1;
+            });
+
+        };
+
+        engine = createDefaultEngine();
+        if (!engine) throw 'engine should not be null.';
+        scene = createScene();
+
+        engine.runRenderLoop(function () {
+            if (scene) {
+                loop();
+                scene.render();
+
+            }
+        });
+
+
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
+</body>
+
+</html>
