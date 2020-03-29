@@ -60,17 +60,14 @@
             camera.setPosition(new BABYLON.Vector3(0, 0, -15));
             camera.attachControl(canvas, true);
 
-            // Add lights to the scene
             
-
-            var light1 = new BABYLON.PointLight("light2", new BABYLON.Vector3(0, 0,0), scene);
-            //var light1 = new BABYLON.PointLight("light2", new BABYLON.Vector3(1, 0,0), scene);
-            var light1Pos = BABYLON.MeshBuilder.CreateSphere("sph", {diameter: 0.2}, scene);
-            light1Pos.position =  new BABYLON.Vector3(0,0,0);
-            //light1Pos.position =  new BABYLON.Vector3(-1.4,0,0);
+            var pos = new BABYLON.Vector3(-3,0,0);
+            var light = new BABYLON.PointLight("light", pos, scene);
+            var lightPos = BABYLON.MeshBuilder.CreateSphere("sph", {diameter: 0.2}, scene);
+            lightPos.position =  pos
             
             
-            var greenMaterial = new BABYLON.StandardMaterial("myMaterial",scene);
+            var greenMaterial = new BABYLON.StandardMaterial("myMaterialGreen",scene);
             greenMaterial.diffuseColor = new BABYLON.Color3(0,1,0);
             var s1 = BABYLON.MeshBuilder.CreateSphere("sph", {}, scene);
             s1.position.x = -2;
@@ -82,7 +79,7 @@
 
 
 
-            var redMaterial = new BABYLON.StandardMaterial("myMaterial",scene);
+            var redMaterial = new BABYLON.StandardMaterial("myMaterialRed",scene);
             redMaterial.diffuseColor = new BABYLON.Color3(1,0,0);
 
             var s3 = BABYLON.MeshBuilder.CreateSphere("sph", {}, scene);

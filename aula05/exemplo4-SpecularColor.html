@@ -65,10 +65,10 @@
 
             //Luz
             var light = new BABYLON.PointLight("light", new BABYLON.Vector3(0, 0,0), scene);
-            light.specular = new BABYLON.Color3(1, 1, 1);
-            //light.specular = new BABYLON.Color3(0, 1, 0);
-            //light.specular = new BABYLON.Color3(0, 0, 1);
-
+            light.specular = new BABYLON.Color3(0, 0, 1);
+            light.diffuse = new BABYLON.Color3(0, 0, 0);
+            
+      
 
             //Meus materiais
             var myMaterialWhite = new BABYLON.StandardMaterial("myMaterialWhite",scene);

@@ -54,7 +54,7 @@
 
             // Create the scene space
             var scene = new BABYLON.Scene(engine);
-           
+            scene.ambientColor = new BABYLON.Color3(0, 0, 0);
 
             // Add a camera to the scene and attach it to the canvas
             var camera = new BABYLON.ArcRotateCamera("Camera", 0,0,0, BABYLON.Vector3.Zero(), scene);
@@ -64,7 +64,7 @@
             
 
             //Luz
-            //var light = new BABYLON.PointLight("light", new BABYLON.Vector3(0, 0,0), scene);
+            var light = new BABYLON.PointLight("light", new BABYLON.Vector3(0, 0,0), scene);
            
             //Meus materiais
             var myMaterialWhite = new BABYLON.StandardMaterial("myMaterialWhite",scene);
@@ -80,7 +80,7 @@
             s1.material = myMaterialWhite;
             var s2 = BABYLON.MeshBuilder.CreateSphere("sph", {}, scene);
             s2.position.x =  2;
-            s2.material = myMaterialWhite;
+            //s2.material = myMaterialWhite;
 
 
             //Aplica red como material
