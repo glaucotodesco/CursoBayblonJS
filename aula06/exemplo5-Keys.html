@@ -50,7 +50,7 @@
         var scene = null;
         var terra, lua, sistema;
         var wireStatus = false;
-        var rotationStatus = true;
+        var rotationStatus = false;
         var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true }); };
 
         var createScene = function () {
@@ -78,52 +78,39 @@
             luaMaterial.diffuseTexture = new BABYLON.Texture("textures/moonmap1k.jpg", scene);
 
 
-            //Create Buttons
-            var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("myUI");
-            var wireButton = BABYLON.GUI.Button.CreateSimpleButton("wire", "Wire Off");
-            wireButton.width = 0.1
-            wireButton.top = 400;
-            wireButton.left = -120;
-            wireButton.height = "40px"
-            wireButton.color = "white"
-            wireButton.background = "blue"
-            advancedTexture.addControl(wireButton);
+            /****************************Key Control Multiple Keys************************************************/
 
-            var rotationButton = BABYLON.GUI.Button.CreateSimpleButton("stop", "Rotation On");
-            rotationButton.width = 0.1
-            rotationButton.top = 400;
-            rotationButton.left = +120;
-            rotationButton.height = "40px"
-            rotationButton.color = "white"
-            rotationButton.background = "blue"
-            advancedTexture.addControl(rotationButton);
+            var map = {}; //object for multiple key presses
+            scene.actionManager = new BABYLON.ActionManager(scene);
 
-            wireButton.onPointerClickObservable.add(function () {
-                wireStatus = !wireStatus;
+            scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyDownTrigger, function (evt) {
+                map[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
 
-                if (wireStatus) {
-                    luaMaterial.wireframe = true;
-                    terraMaterial.wireframe = true;
-                    wireButton.textBlock.text = "Wire On"
-                }
-                else {
-                    luaMaterial.wireframe = false;
-                    terraMaterial.wireframe = false;
-                    wireButton.textBlock.text = "Wire Off"
-                }
+            }));
+
+
+            scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyUpTrigger, function (evt) {
+                map[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
+            }));
+            /****************************Move Sphere******************************************************/
+
+            scene.registerAfterRender(function () {
+                if ((map["r"] || map["R"])) {
+                    rotationStatus = true;
+                };
+
+                if ((map["f"] || map["F"])) {
+                    rotationStatus = false;
+                };
+
+                if ((map["w"] || map["W"])) {
+                    wireStatus = true;
+                };
+                
+                if ((map["s"] || map["S"])) {
+                    wireStatus = false;
+                };
             });
-
-            rotationButton.onPointerClickObservable.add(function () {
-                rotationStatus = !rotationStatus;
-                if(rotationStatus){
-                    rotationButton.textBlock.text = "Rotation On";
-                }
-                else{
-                    rotationButton.textBlock.text = "Rotation Off";
-                }
-            });
-
-
 
 
             //Aplica white como material
@@ -147,6 +134,15 @@
                 if (rotationStatus) {
                     terra.rotation.y += 0.01;
                     sistema.rotation.y += 0.01;
+                }
+
+                if (wireStatus) {
+                    luaMaterial.wireframe = true;
+                    terraMaterial.wireframe = true;
+                }
+                else {
+                    luaMaterial.wireframe = false;
+                    terraMaterial.wireframe = false;
                 }
 
 
