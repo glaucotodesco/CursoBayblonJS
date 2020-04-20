@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <title>Babylon.js sample code</title>
+
+    <!-- Babylon.js -->
+    <script src="https://code.jquery.com/pep/0.4.2/pep.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
+    <script src="https://preview.babylonjs.com/ammo.js"></script>
+    <script src="https://preview.babylonjs.com/cannon.js"></script>
+    <script src="https://preview.babylonjs.com/Oimo.js"></script>
+    <script src="https://preview.babylonjs.com/libktx.js"></script>
+    <script src="https://preview.babylonjs.com/earcut.min.js"></script>
+    <script src="https://preview.babylonjs.com/babylon.js"></script>
+    <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+    <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+    <script src="https://preview.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
+    <script src="https://preview.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
+    <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+    <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
+    <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
+
+    <style>
+        html,
+        body {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="renderCanvas"></canvas>
+    <script>
+        var canvas = document.getElementById("renderCanvas");
+
+        var engine = null;
+        var scene = null;
+        var terra, lua, sistema;
+        var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true }); };
+
+        var createScene = function () {
+
+            // Create the scene space
+            var scene = new BABYLON.Scene(engine);
+           
+            var pos = new BABYLON.Vector3(30,0,-30);
+            var light = new BABYLON.PointLight("light", pos, scene);
+            light.specular = new BABYLON.Color3(0, 0, 0);
+
+            // Add a camera to the scene and attach it to the canvas
+            var camera = new BABYLON.ArcRotateCamera("Camera", 0,0,0, BABYLON.Vector3.Zero(), scene);
+            camera.setPosition(new BABYLON.Vector3(0, 0, -30));
+            camera.attachControl(canvas, true);
+
+            //Cor ambiente
+            scene.ambientColor = new BABYLON.Color3(0, 1, 0);
+            
+
+            //Meus materiais
+            var terraMaterial = new BABYLON.StandardMaterial("terra", scene);
+            terraMaterial.diffuseTexture = new BABYLON.Texture("textures/earthcloudmap.jpg", scene);
+            terraMaterial.wireframe = true;
+            
+            var luaMaterial = new BABYLON.StandardMaterial("lua", scene);
+            luaMaterial.diffuseTexture =  new BABYLON.Texture("textures/moonmap1k.jpg", scene);
+            luaMaterial.wireframe = true;
+
+            
+            
+            
+            
+            //Aplica white como material
+            terra = BABYLON.MeshBuilder.CreateSphere("terra", {diameter:7.3}, scene);
+            terra.material = terraMaterial
+            
+
+            lua = BABYLON.MeshBuilder.CreateSphere("lua", {diameter:2.1}, scene);
+            lua.position.x =  11;
+            lua.material = luaMaterial;
+            
+
+            sistema = new BABYLON.Mesh("sistema", scene);
+            sistema.addChild(terra);
+            sistema.addChild(lua);
+
+            //Animations
+            var renderLoop = function () {
+                scene.render();
+
+                terra.rotation.y += 0.01;
+                sistema.rotation.y += 0.01;
+                
+            };
+            engine.runRenderLoop(renderLoop);
+
+            
+
+            return scene;
+
+        }
+
+        
+        engine = createDefaultEngine();
+        if (!engine) throw 'engine should not be null.';
+        scene = createScene();
+
+        engine.runRenderLoop(function () {
+            if (scene) {
+                scene.render();
+            }
+        });
+
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
+</body>
+
+</html>
