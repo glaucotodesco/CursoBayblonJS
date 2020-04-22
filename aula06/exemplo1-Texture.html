@@ -58,26 +58,21 @@
            
             var pos = new BABYLON.Vector3(30,0,-30);
             var light = new BABYLON.PointLight("light", pos, scene);
-            light.specular = new BABYLON.Color3(0, 0, 0);
+            //light.specular = new BABYLON.Color3(0, 0, 0);
 
             // Add a camera to the scene and attach it to the canvas
             var camera = new BABYLON.ArcRotateCamera("Camera", 0,0,0, BABYLON.Vector3.Zero(), scene);
             camera.setPosition(new BABYLON.Vector3(0, 0, -30));
             camera.attachControl(canvas, true);
 
-            //Cor ambiente
-            scene.ambientColor = new BABYLON.Color3(0, 1, 0);
             
-
             //Meus materiais
             var terraMaterial = new BABYLON.StandardMaterial("terra", scene);
+            terraMaterial.specularTexture = new BABYLON.Texture("textures/earthcloudmap.jpg", scene);
             terraMaterial.diffuseTexture = new BABYLON.Texture("textures/earthcloudmap.jpg", scene);
             
             var luaMaterial = new BABYLON.StandardMaterial("lua", scene);
             luaMaterial.diffuseTexture =  new BABYLON.Texture("textures/moonmap1k.jpg", scene);
-
-            
-            
             
             
             //Aplica white como material

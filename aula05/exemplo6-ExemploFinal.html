@@ -49,6 +49,7 @@
         var engine = null;
         var scene = null;
         var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true }); };
+        var light2;
 
         var createScene = function () {
 
@@ -68,14 +69,23 @@
 	        light1.specular = new BABYLON.Color3(0.8, 0.8, 0.8);
 
             //Luz
-            var light2 = new BABYLON.PointLight("light", new BABYLON.Vector3(10, 0, 0), scene);
+            light2 = new BABYLON.PointLight("light", new BABYLON.Vector3(10, 0, 0), scene);
             light2.diffuse = new BABYLON.Color3(1, 1, 1);
 	        light2.specular = new BABYLON.Color3(0.8, 0.8, 0.8);
 
 
+            var CoT = new BABYLON.TransformNode("root"); 
+            light2.parent = CoT;
+
 	        createTree();
 
             
+    //Animation
+    var angle = 0;
+    scene.registerBeforeRender(function(){
+        CoT.rotation.y = angle;
+        angle +=0.01;
+    });
          
 
 
@@ -158,13 +168,16 @@
 
         }
 
+   
+
+
         function loop() {
 
             var meshes = scene.getMeshesByID("star");
-
+            
             var inc = 1;
             meshes.forEach(function (mesh) {
-                mesh.rotation.y += (0.01 * inc);
+              //  mesh.rotation.y += (0.01 * inc);
                 inc = inc * -1;
             });
 

@@ -80,37 +80,23 @@
 
             /****************************Key Control Multiple Keys************************************************/
 
-            var map = {}; //object for multiple key presses
+
             scene.actionManager = new BABYLON.ActionManager(scene);
 
-            scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyDownTrigger, function (evt) {
-                map[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
+            scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
+                BABYLON.ActionManager.OnKeyDownTrigger, function (evt) {
+                    var key = evt.sourceEvent.key;
+                    key = key.toUpperCase();
 
-            }));
+                    switch (key) {
+                        case 'R': rotationStatus = !rotationStatus; break;
+                        case 'W': wireStatus = !wireStatus; break;
+                    }
+
+                }
+            ));
 
 
-            scene.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyUpTrigger, function (evt) {
-                map[evt.sourceEvent.key] = evt.sourceEvent.type == "keydown";
-            }));
-            /****************************Move Sphere******************************************************/
-
-            scene.registerAfterRender(function () {
-                if ((map["r"] || map["R"])) {
-                    rotationStatus = true;
-                };
-
-                if ((map["f"] || map["F"])) {
-                    rotationStatus = false;
-                };
-
-                if ((map["w"] || map["W"])) {
-                    wireStatus = true;
-                };
-                
-                if ((map["s"] || map["S"])) {
-                    wireStatus = false;
-                };
-            });
 
 
             //Aplica white como material
